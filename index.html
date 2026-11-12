@@ -24,11 +24,11 @@ main{max-width:1000px;margin:0 auto;padding:24px 14px 60px}
 .sec>h2{margin:0;padding:10px 20px;background:#f6efe3;border-bottom:3px solid #cbb89c;font-size:clamp(20px,3.4vw,28px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sec>h2 img{width:42px}
 .in{padding:16px 18px}.in h3{margin:18px 0 8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.card{background:#faf4e8;border:2px solid #d8c9b0;border-radius:14px;padding:10px;text-align:center;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px}
+.card{background:#faf4e8;border:2px solid #d8c9b0;border-radius:14px;padding:10px 8px;text-align:center;font-size:13px;word-break:keep-all}
 .card img{width:64px;height:64px;object-fit:contain}
 .card img.big{width:120px;height:120px}
-.card b{display:block;font-size:15px}
+.card b{display:block;font-size:14px;letter-spacing:-0.3px;margin:4px 0 2px;word-break:keep-all}
 .tag{display:inline-block;background:#8fd0d8;border-radius:10px;padding:0 8px;font-size:11px;font-weight:bold;margin-top:4px}
 .tag.soon{background:#e0b8e8}.tag.r2{background:#f5d98a}.tag.r3{background:#f0a8a8}
 .steps{counter-reset:s;display:grid;gap:10px}
@@ -138,9 +138,12 @@ footer{text-align:center;color:#fff8;padding:30px 10px 50px;font-size:13px}
   <p>필수 아이템의 <b>확정 구매 공간.</b></p>
   <div class="grid">
     <div class="card"><img data-i="스크롤/강화 스크롤"><b>기본 강화 스크롤</b><span class="tag">상시 판매</span></div>
-    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 뽑기권</b><span class="tag">상시 판매</span></div>
-    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 뽑기권</b><span class="tag r2">상시 판매</span></div>
-    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 스크롤 뽑기권</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 스크롤 뽑기권</b><span class="tag r2">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 스크롤 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/일반"><b>일반 꾸미기 뽑기권</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/고급"><b>고급 꾸미기 뽑기권</b><span class="tag r2">상시 판매</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/희귀"><b>희귀 꾸미기 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
   </div>
   <p class="note">희귀 뽑기권의 경우 게임 밸런스 유지를 위한 일일 구매 수량 제한 적용.</p>
 </div></section>
