@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>슬라임 광산 - 게임 소개</title>
+<style>
+*{box-sizing:border-box;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:linear-gradient(#3b3a52,#4b4a63 40%,#5c5a73);color:#4a3b32;line-height:1.6}
+img{image-rendering:pixelated;max-width:100%}
+.hero{position:relative;min-height:62vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:40px 16px;background:#3b3a52 center/cover no-repeat}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(#1d1b2299,#1d1b2666 60%,#3b3a52)}
+.hero>*{position:relative}
+.hero h1{font-size:clamp(36px,8vw,72px);margin:0;text-shadow:0 4px 0 #2e2530,0 0 24px #000a}
+.hero p{font-size:clamp(15px,2.6vw,24px);margin:12px 0 0;text-shadow:0 2px 6px #000}
+.play-btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:14px 32px;background:#8fcf8f;color:#1e381e;font-size:clamp(16px,3vw,22px);font-weight:bold;text-decoration:none;border:3px solid #5fae5f;border-radius:50px;box-shadow:0 6px 0 #3e7e3e,0 10px 20px #0008;transition:all .15s ease}
+.play-btn:hover{background:#a3e0a3;transform:translateY(-2px);box-shadow:0 8px 0 #3e7e3e,0 14px 24px #0008}
+.play-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #3e7e3e,0 4px 10px #0006}
+nav{position:sticky;top:0;z-index:5;background:#2e2530ee;display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:8px}
+nav a{color:#efe2cc;text-decoration:none;font-size:14px;padding:4px 12px;border-radius:14px}
+nav a:hover{background:#ffffff22}
+nav a.nav-play{background:#8fcf8f;color:#1e381e;font-weight:bold}
+nav a.nav-play:hover{background:#a3e0a3}
+main{max-width:1000px;margin:0 auto;padding:24px 14px 60px}
+.sec{scroll-margin-top:64px;background:#efe2cc;border:4px solid #2e2530;border-radius:20px;margin:26px 0;box-shadow:0 8px 24px #0006;overflow:hidden}
+.sec>h2{margin:0;padding:10px 20px;background:#f6efe3;border-bottom:3px solid #cbb89c;font-size:clamp(20px,3.4vw,28px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sec>h2 img{width:42px}
+.in{padding:16px 18px}.in h3{margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.card{background:#faf4e8;border:2px solid #d8c9b0;border-radius:14px;padding:10px;text-align:center;font-size:13px}
+.card img{width:64px;height:64px;object-fit:contain}
+.card img.big{width:120px;height:120px}
+.card b{display:block;font-size:15px}
+.tag{display:inline-block;background:#8fd0d8;border-radius:10px;padding:0 8px;font-size:11px;font-weight:bold;margin-top:4px}
+.tag.soon{background:#e0b8e8}.tag.r2{background:#f5d98a}.tag.r3{background:#f0a8a8}
+.steps{counter-reset:s;display:grid;gap:10px}
+.step{counter-increment:s;background:#faf4e8;border:2px solid #d8c9b0;border-radius:14px;padding:10px 14px 10px 58px;position:relative}
+.step:before{content:counter(s);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:#8fcf8f;border:3px solid #5fae5f;font-weight:bold;display:flex;align-items:center;justify-content:center;color:#2d4a2d}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.two>img{width:100%;max-width:260px;margin:auto;display:block}
+.note{font-size:13px;color:#7a6a5a}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{border:2px solid #d8c9b0;padding:6px 8px;text-align:center;background:#faf4e8}th{background:#e8d9b8}
+.soonbox{border:3px dashed #b79ad0;background:#f3ecf8;border-radius:14px;padding:10px 14px;margin-top:10px}
+/* 왼쪽 정렬 리스트 (의뢰소·보석 세공) */
+.qlist{display:grid;gap:10px;margin:12px 0}
+.qrow{display:flex;gap:14px;align-items:flex-start;text-align:left;background:#faf4e8;border:2px solid #d8c9b0;border-radius:14px;padding:12px 14px}
+.qrow .tag{flex:0 0 78px;text-align:center;font-size:13px;padding:3px 0;margin:2px 0 0}
+.qrow p{margin:0;font-size:15px;line-height:1.7}
+@media(max-width:560px){.qrow{flex-direction:column;gap:6px}.qrow .tag{flex:none;padding:3px 12px}}
+footer{text-align:center;color:#fff8;padding:30px 10px 50px;font-size:13px}
+</style></head><body>
+
+<header class="hero" id="top">
+  <h1>⛏ 슬라임 광산</h1>
+  <p>광석 채굴, 주괴 제련, 곡괭이 육성 중심 방치형 채굴 게임</p>
+  <a href="https://nahyoen05.github.io/MINING/" target="_blank" class="play-btn">🎮 게임 시작하기 ▶</a>
+</header>
+
+<nav><a href="https://nahyoen05.github.io/MINING/" target="_blank" class="nav-play">🎮 게임 시작</a><a href="#intro">게임 소개</a><a href="#play">플레이 방법</a><a href="#char">캐릭터</a><a href="#ore">광석 도감</a><a href="#pick">곡괭이·강화</a><a href="#furnace">화로·슬라임</a><a href="#gem">보석 세공</a><a href="#shop">상점</a><a href="#gacha">뽑기</a><a href="#quest">의뢰소</a></nav>
+
+<main>
+<section class="sec" id="intro"><h2><img data-i="메뉴바/가방">게임 소개</h2><div class="in">
+  <p>동굴 속 광산에서 진행되는 <b>자동 광석 채굴</b> 방치형 게임. 방치형 자동 채굴 및 광석 직접 클릭을 통한 채굴 속도 증가 기능 지원.</p>
+  <p>채굴 광석의 화로 제련, 주괴를 활용한 상위 곡괭이 제작 및 심층 광산 도전. 슬라임 부화 및 화로 배치를 통한 제련 속도 향상 시스템 탑재.</p>
+</div></section>
+
+<section class="sec" id="play"><h2><img data-i="메뉴바/곡괭이 제작강화">플레이 방법</h2><div class="in"><div class="steps">
+  <div class="step"><b>광석 채굴</b><br>장착 곡괭이 기반 자동 채굴 진행. 광석 더미 직접 클릭 시 채굴 게이지 가속.</div>
+  <div class="step"><b>보관함 확인</b><br>채굴 광석 및 획득 재료의 <b>보관함(가방)</b> 자동 적재.</div>
+  <div class="step"><b>화로 제련</b><br>화로 메뉴 내 <b>제련 대상 광석</b> 선택 및 자동 제련 활성화. (구리·주석·철·금 광석의 주괴화)</div>
+  <div class="step"><b>곡괭이 제작 &amp; 강화</b><br>주괴 및 골드 소모를 통한 곡괭이 제작. 강화를 통한 채굴 속도 향상 및 무작위 속성 획득.</div>
+  <div class="step"><b>세공 &amp; 의뢰</b><br>보석 세공 장신구의 의뢰소 납품을 통한 골드 및 희귀 보상 획득. 상점을 통한 필요 아이템 확정 구매.</div>
+</div></div></section>
+
+<section class="sec" id="char"><h2><img data-i="플레이어/기본 여자/다이아">캐릭터</h2><div class="in two">
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card"><img class="big" data-i="플레이어/기본 여자/다이아"><b>여자 캐릭터</b></div>
+    <div class="card"><img class="big" data-i="플레이어/기본 남자/다이아"><b>남자 캐릭터</b></div>
+  </div>
+  <div><p><b>여자 · 남자</b> 2종 캐릭터 선택 기능 지원. 클릭을 통한 수시 변경 가능.</p>
+  <p><b>장착 곡괭이 종류에 따른 캐릭터 외형 변화.</b> (나무·돌·철·금·다이아 곡괭이별 전용 외형 / 사진: 다이아 곡괭이 장착 모습)</p>
+  <p>꾸미기 뽑기권 획득 아이템을 활용한 <b>캐릭터 및 슬라임 커스터마이징.</b></p></div>
+</div></section>
+
+<section class="sec" id="ore"><h2><img data-i="곡괭이 재료/다이아">광석 도감</h2><div class="in">
+  <p class="note">곡괭이 단계별 등급 광석 등장. 판매가는 임시 판매 기준.</p>
+  <div class="grid" id="oreGrid"></div>
+  <h3>제련 주괴</h3><div class="grid" id="ingotGrid"></div>
+</div></section>
+
+<section class="sec" id="pick"><h2><img data-i="곡괭이/다이아 곡괭이">곡괭이 제작 &amp; 강화</h2><div class="in">
+  <div class="grid" id="pickGrid"></div>
+  <h3>강화 시스템</h3>
+  <table><tr><th>항목</th><th>내용</th></tr>
+  <tr><td>강화 단계</td><td>최대 +10강까지 강화 가능. 단계 상승 시 채굴 속도 증가.</td></tr>
+  <tr><td>성공 확률</td><td>단계 상승에 따른 성공 확률 감소 (행운 속성을 통한 보완 가능).</td></tr>
+  <tr><td>파괴 확률</td><td>+3강 이상 실패 시 곡괭이 파괴 위험 존재 (내구도 속성을 통한 확률 감소).</td></tr>
+  <tr><td>랜덤 속성</td><td>강화 성공 시 <b>채굴 속도 · 행운 · 광물 드롭 확률 · 내구도</b> 중 1종 무작위 부여.</td></tr></table>
+  <h3>강화 스크롤 6종</h3>
+  <div class="grid" id="scrollGrid"></div>
+  <p class="note">스크롤 사용은 선택 사항이며, 미사용 상태에서도 강화 진행 가능.</p>
+</div></section>
+
+<section class="sec" id="furnace"><h2><img data-i="화로/일반_on">화로 &amp; 슬라임</h2><div class="in">
+  <p>초기 <b>일반 화로</b> 상태로 시작. <b>슬라임 부화기</b>를 통한 알 부화(🪙30, 15초 소요, 무작위 슬라임) 및 화로 배치로 기능 강화.</p>
+  <div class="grid">
+    <div class="card"><img data-i="화로/일반_on"><b>일반 화로</b>기본 제련 기능</div>
+    <div class="card"><img data-i="화로/풀_on"><b>풀 슬라임</b>25% 확률로 주괴 +1 획득</div>
+    <div class="card"><img data-i="화로/불_on"><b>불 슬라임</b>제련 속도 2배 증가</div>
+    <div class="card"><img data-i="화로/물_on"><b>물 슬라임</b>제련 속도 1.5배 증가</div>
+    <div class="card"><img data-i="화로/바람_on"><b>바람 슬라임</b>제련 속도 1.3배 증가 + 10% 확률 주괴 +1</div>
+    <div class="card"><img data-i="슬라임 부화기/부화기 (알 있음)"><b>슬라임 부화기</b>자동 부화 기능 지원</div>
+  </div>
+</div></section>
+
+<section class="sec" id="gem"><h2><img data-i="보석 세공/보석 세공하는 곳">보석 세공 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <div class="two">
+    <img data-i="보석 세공/보석 세공하는 곳">
+    <div><p>채굴 보석의 세공대를 통한 <b>장신구 가공.</b></p>
+    <p>보석 종류별 <b>반지 · 팔찌 · 목걸이</b> 제작 가능. (예: 다이아 활용 다이아 반지, 다이아 팔찌, 다이아 목걸이 제작)</p></div>
+  </div>
+  <h3>보석별 장신구</h3>
+  <div class="grid">
+    <div class="card"><img data-i="곡괭이 재료/다이아"><b>다이아</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/루비"><b>루비</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/애메랄드"><b>에메랄드</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/자수정"><b>자수정</b>반지 · 팔찌 · 목걸이</div>
+  </div>
+  <h3>세공 장신구 활용처</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">단품 납품</span><p>제작 장신구의 <b>의뢰소 개별 납품</b>을 통한 골드 획득.</p></div>
+    <div class="qrow"><span class="tag r2">세트 납품</span><p>동일 보석 세트(반지·팔찌·목걸이) <b>모음 납품</b>을 통한 <b>추가 골드 획득.</b></p></div>
+  </div>
+  <div class="soonbox note">※ 미구현 상태이며 세부 규칙은 추후 업데이트 시 공개 예정.</div>
+</div></section>
+
+<section class="sec" id="shop"><h2><img data-i="메뉴바/상점">상점 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p>필수 아이템의 <b>확정 구매 공간.</b></p>
+  <div class="grid">
+    <div class="card"><img data-i="스크롤/강화 스크롤"><b>기본 강화 스크롤</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 뽑기권</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 뽑기권</b><span class="tag r2">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
+  </div>
+  <p class="note">희귀 뽑기권의 경우 게임 밸런스 유지를 위한 일일 구매 수량 제한 적용.</p>
+</div></section>
+
+<section class="sec" id="gacha"><h2><img data-i="스크롤 뽑기권/고급">뽑기 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p><b>스크롤 뽑기권</b>과 <b>꾸미기 뽑기권</b> 2종 구성. 각각 <b>일반 · 고급 · 희귀</b> 등급 존재 및 등급 상승에 따른 희귀 아이템 출현율 증가.</p>
+  <h3>스크롤 뽑기권</h3>
+  <div class="grid">
+    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 스크롤 뽑기권</b>기본 스크롤 중심 구성<br><span class="tag">일반</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 스크롤 뽑기권</b>상위 스크롤 출현율 증가<br><span class="tag r2">고급</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 스크롤 뽑기권</b>희귀 스크롤 출현율 증가<br><span class="tag r3">희귀</span></div>
+  </div>
+  <p>강화 성공률 증가 스크롤, 곡괭이 <b>부여 속성 재설정(새로고침)</b> 스크롤 등 획득 가능. <b>파괴 방지 스크롤</b>의 낮은 확률 획득 지원.</p>
+  <h3>꾸미기 뽑기권</h3>
+  <div class="grid">
+    <div class="card"><img data-i="꾸미기 뽑기권/일반"><b>일반 꾸미기 뽑기권</b><span class="tag">일반</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/고급"><b>고급 꾸미기 뽑기권</b><span class="tag r2">고급</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/희귀"><b>희귀 꾸미기 뽑기권</b><span class="tag r3">희귀</span></div>
+  </div>
+  <p><b>캐릭터 및 슬라임 외형 변경용</b> 꾸미기 아이템 획득. 등급 상승에 따른 희귀 꾸미기 출현율 증가.</p>
+</div></section>
+
+<section class="sec" id="quest"><h2><img data-i="메뉴바/의뢰소">의뢰소 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p>세공 <b>목걸이 · 반지 · 팔찌</b> 납품을 통한 보상 획득 시스템.</p>
+  <p>의뢰 등급 상승에 따른 요구 재료 수량 및 가치 증가. 완료 시 <b>골드 및 확률적 꾸미기 아이템·강화 스크롤</b> 보상 제공.</p>
+  <h3>의뢰 등급</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">일반 의뢰</span><p>일정 시간 경과 또는 <b>게임 머니</b> 소모를 통한 의뢰 갱신 기능.</p></div>
+    <div class="qrow"><span class="tag r2">희귀 의뢰</span><p>긴 대기 시간 또는 높은 비용 소모, <b>고급 뽑기권 · 고급 강화 스크롤 · 희귀 꾸미기 아이템</b> 보상 획득 가능.</p></div>
+    <div class="qrow"><span class="tag r3">특별 의뢰</span><p><b>매일 자동 초기화</b> (비용 갱신 불가). <b>최고급 꾸미기 아이템 및 파괴 방지 스크롤</b> 등 희귀 보상 구성.</p></div>
+  </div>
+  <h3>의뢰 예시</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">다이아</span><p><b>다이아 장신구 납품</b> : 다이아 팔찌 1개 + 다이아 반지 2개</p></div>
+    <div class="qrow"><span class="tag r3">루비</span><p><b>루비 장신구 납품</b> : 루비 목걸이 2개 + 루비 반지 1개</p></div>
+    <div class="qrow"><span class="tag r2">혼합</span><p><b>혼합 장신구 납품</b> : 다이아 팔찌 1개 + 에메랄드 반지 1개 등 <b>이종 보석 조합</b> 요구.</p></div>
+  </div>
+  <p class="note">의뢰 화면 내 납품 목록 및 완료 보상 확인, 보유 세공 아이템 즉시 납품 지원. 갱신 대기 시간 표시 및 골드 소모 갱신 기능 제공. 상점의 안정적 구매와 의뢰소의 희귀 보상 획득 구조 구축.</p>
+</div></section>
+</main>
+<footer>슬라임 광산 · 광산으로의 탐험 출발</footer>
+
+<script>
+const IMG='images/', src=p=>IMG+encodeURI(p)+'.png';
+const TN=['나무','돌','철','금','다이아'];
+/* [이름, 이미지, 채굴 가능 곡괭이 단계, 판매가] */
+const ORES=[['나무','곡괭이 재료/나무',0,3],['돌','곡괭이 재료/돌',0,2],['석탄','광질/석탄',0,5],['구리 광석','광질/구리 광석',1,12],['주석 광석','광질/주석 광석',1,12],['철 광석','광질/철 광석',1,18],['금 광석','광질/금 광석',2,30],['자수정','광질/자수정',2,60],['루비','광질/루비',3,90],['에메랄드','광질/애메랄드',3,90],['다이아','곡괭이 재료/다이아',3,200]];
+const ING=[['구리 광석','구리 주괴','광질/구리 주괴',35],['주석 광석','주석 주괴','광질/주석 주괴',35],['철 광석','철 주괴','곡괭이 재료/철',55],['금 광석','금 주괴','곡괭이 재료/금',100]];
+const REC=['소모 골드: 🪙100','돌 ×10, 나무 ×3, 🪙200','철 주괴 ×5, 나무 ×3, 🪙500','금 주괴 ×5, 철 주괴 ×2, 🪙1,000','다이아 ×5, 금 주괴 ×3, 🪙3,000'];
+const SCR=[['강화 스크롤','강화 성공 확률 증가'],['고급 강화 스크롤','강화 성공 확률 대폭 증가'],['복구 스크롤','파괴 아이템 복구'],['축복 스크롤','강화 성공 확률 축복 효과 부여'],['파괴 방지 스크롤','강화 실패 시 파괴 방지'],['확정 강화 스크롤','강화 단계 확정 상승']];
+const set=(id,h)=>document.getElementById(id).innerHTML=h;
+set('oreGrid',ORES.map(o=>`<div class="card"><img src="${src(o[1])}"><b>${o[0]}</b>🪙${o[3]}<br><span class="tag">${TN[o[2]]} 곡괭이 이상</span></div>`).join(''));
+set('ingotGrid',ING.map(o=>`<div class="card"><img src="${src(o[2])}"><b>${o[1]}</b>${o[0]} 제련<br>🪙${o[3]}</div>`).join(''));
+set('pickGrid',TN.map((n,i)=>`<div class="card"><img src="${src('곡괭이/'+n+' 곡괭이')}"><b>${n} 곡괭이</b>채굴 속도 ×${(1+.4*i).toFixed(1)}<br><span class="note">${REC[i]}</span></div>`).join(''));
+set('scrollGrid',SCR.map(s=>`<div class="card"><img src="${src('스크롤/'+s[0])}"><b>${s[0]}</b>${s[1]}</div>`).join(''));
+document.querySelectorAll('[data-i]').forEach(e=>e.src=src(e.dataset.i));
+document.querySelector('.hero').style.backgroundImage=`url("${src('배경/배경')}")`;
+</script></body></html>
