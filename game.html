@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>슬라임 광산</title>
+<style>
+*{box-sizing:border-box;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif}
+html{font-size:min(.88vw,1.5vh)} /* 팝업은 rem 단위: 이 숫자를 키우면 팝업이 커지고, 줄이면 작아져요 */
+body{margin:0;background:#1d1b26;display:flex;flex-direction:column;align-items:center;color:#4a3b32;font-size:16px}
+img{image-rendering:pixelated}
+#stage{position:relative;width:min(100vw,calc(100vh*1.7778));aspect-ratio:16/9;overflow:hidden;background:linear-gradient(#4b4a63,#5c5a73 55%,#7b6f66 55%,#6a5f58);margin-top:8px;image-rendering:pixelated}
+.obj{position:absolute;bottom:17%;cursor:pointer;transition:transform .08s}
+.obj:hover{filter:brightness(1.12)}
+#ore{left:-.5%;width:28%;z-index:2}#pl{left:15.5%;width:30%}#fu{left:38.5%;width:30%}#inc{left:61.5%;width:23%}#gem{left:80%;width:21%;cursor:not-allowed}
+#ore.hit{transform:scale(.95)}
+#mbar{position:absolute;left:4%;bottom:14.5%;width:18%;height:1.2%;background:#0006;border-radius:9px;overflow:hidden}
+#mbar i{display:block;height:100%;width:0;background:#7be08a}
+#gb{position:absolute;left:1.5%;top:2.5%;background:#f3e9d8;border:3px solid #cbb89c;border-radius:14px;padding:.4em 1em;font-size:clamp(14px,2.4vw,28px)}
+#top{position:absolute;right:1.5%;top:2%;display:flex;gap:clamp(8px,1.4vw,20px)}
+.mb{background:none;border:0;cursor:pointer;padding:0}
+.mb img{width:clamp(48px,8.6vw,108px);display:block}
+#bot{position:absolute;left:2%;bottom:2%;display:flex;align-items:flex-end;gap:clamp(8px,1.6vw,22px)}
+.fl{position:absolute;color:#fff;font-weight:bold;text-shadow:0 1px 3px #000;pointer-events:none;animation:up 1s forwards;font-size:clamp(12px,1.8vw,20px)}
+@keyframes up{to{transform:translateY(-60px);opacity:0}}
+#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:.5em 1.2em;border-radius:20px;opacity:0;transition:opacity .3s;z-index:20;pointer-events:none;font-size:15px}
+.rs{text-align:center;font-size:12px;color:#fff8;padding:6px}
+
+/* ===== 팝업 (rem 단위, 한 화면에 맞춤: 스크롤/빈 공간 없음) ===== */
+#ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(3px)}
+#md{width:92rem;height:56rem;background:#efe2cc;border:.4rem solid #2e2530;border-radius:1.8rem;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 .8rem 3rem #0008;line-height:1.3;font-size:1.5rem}
+#mh{flex:none;display:flex;align-items:center;gap:1rem;height:6.6rem;padding:0 8rem 0 1.6rem;font-size:2.8rem;font-weight:bold;background:#f6efe3;border-bottom:.3rem solid #cbb89c}
+#mh img{width:5rem;height:5rem}
+#x{position:absolute;right:1.2rem;top:1.1rem;width:4.4rem;height:4.4rem;border:.3rem solid #2e2530;background:#c9bfdc;border-radius:1rem;font-size:2.2rem;font-weight:bold;cursor:pointer;color:#2e2530;line-height:1}
+#mbody{flex:1;min-height:0;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:.9rem}
+.two{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.two.inv{grid-template-columns:4fr 6fr}
+.col{display:flex;flex-direction:column;gap:.9rem;min-height:0}
+.card{flex:1;min-height:0;background:#faf4e8;border:.2rem solid #d8c9b0;border-radius:1.3rem;padding:1rem 1.3rem;display:flex;flex-direction:column;gap:.7rem;overflow:auto}
+.ct{flex:none;font-weight:bold;font-size:2rem;display:flex;align-items:center;gap:.6rem;padding-bottom:.4rem;border-bottom:.2rem dashed #d8c9b0}
+.ct img{width:2.8rem}
+.sub{flex:none;font-weight:bold;font-size:1.5rem}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.note{font-size:1.2rem;color:#7a6a5a}
+.lack{color:#c0392b;font-weight:bold}
+/* 탭 */
+.tabs{flex:none;display:flex;gap:.7rem}
+.tabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:.6rem;height:4.6rem;font-size:1.9rem;font-weight:bold;background:#e8dcc6;border:.25rem solid #cbb89c;border-radius:1.2rem;cursor:pointer;color:#4a3b32}
+.tabs button.on{background:#d9f0d0;border-color:#5fae5f}
+.tabs img{width:3.2rem}
+/* 아이템 칸 */
+.ig{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(4,1fr);gap:.6rem}
+.ig.w{grid-template-columns:repeat(6,1fr);grid-template-rows:none;grid-auto-rows:minmax(0,16rem);align-content:start}
+.ig.w.tk{grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(0,17rem)}
+.it{min-height:0;background:#fff9;border:.2rem solid #d8c9b0;border-radius:1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.4rem;text-align:center;overflow:hidden}
+.it img{height:4.2rem;width:auto;max-width:100%;object-fit:contain}
+.it .nm{font-size:1.15rem;line-height:1.1}.it .cn{font-size:1.35rem;font-weight:bold}
+.it.dim{opacity:.55}.it.empty{background:#0000000a;border-style:dashed}
+.lg .it img{height:7.5rem}.lg .it .nm{font-size:1.4rem}.lg .it .cn{font-size:1.7rem}
+.tkr{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:.6rem}
+.tkr .it img{height:2.5rem}.tkr .it .nm{font-size:1.05rem}.tkr .it .cn{font-size:1.2rem}
+.eqp{flex:1;min-height:0;display:flex;gap:1.3rem;align-items:center;background:#fff9;border:.2rem solid #d8c9b0;border-radius:1rem;padding:.8rem 1rem}
+.eqp .bx{position:relative;flex:none}.eqp .bx img{width:11rem;background:#f1e6d3;border-radius:1rem;padding:.4rem}
+.badge{position:absolute;left:50%;bottom:-.2rem;transform:translateX(-50%);background:#5fae5f;color:#fff;font-size:1.2rem;font-weight:bold;border-radius:1rem;padding:.1rem .9rem;white-space:nowrap}
+/* 곡괭이 제작/강화 */
+.fchip{border:.2rem solid #a9c9e6;background:#e6f2fb;border-radius:1.6rem;padding:.2rem 1rem;font-size:1.35rem;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.fchip img{width:2.2rem}.fchip.on{background:#8fd0d8;border-color:#5aa9b3;font-weight:bold}
+.pl5{flex:none;display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem}
+.pk,.mini,.slc,.orc{background:#fff9;border:.2rem solid #d8c9b0;border-radius:1.1rem;padding:.5rem;text-align:center;font-size:1.25rem;cursor:pointer}
+.pk img{width:100%;max-width:6.6rem}.mini{padding:.3rem .5rem;font-size:1.1rem;flex:none}.mini img{width:3.6rem;display:block;margin:auto}
+.pk.on,.mini.on,.slc.on,.orc.on{border-color:#5fae5f;background:#e1f3d8;box-shadow:0 0 0 .25rem #5fae5f55}
+.dt{flex:1;min-height:0;display:flex;gap:1rem;align-items:center;background:#fff9;border:.2rem solid #d8c9b0;border-radius:1.1rem;padding:.6rem}
+.dt img{width:7.4rem;background:#f1e6d3;border-radius:1rem;padding:.4rem}
+.mat{background:#fff9;border:.2rem solid #d8c9b0;border-radius:1rem;padding:.4rem 1rem;display:flex;align-items:center;gap:.6rem;font-size:1.3rem}
+.mat img{width:3.4rem}
+.strip{flex:none;display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.2rem}
+.fr{flex:none;display:flex;gap:.8rem;align-items:center}
+.pbox{background:#fff9;border:.2rem solid #d8c9b0;border-radius:1.1rem;padding:.4rem;text-align:center;font-size:1.2rem;width:10.5rem}
+.pbox img{width:4.4rem}
+.arr{font-size:2.4rem;color:#8a7a6a}
+.rb{flex:1;border:.2rem dashed #d8c9b0;border-radius:1.1rem;padding:.4rem .8rem;font-size:1.25rem;line-height:1.4}
+.q{display:inline-block;min-width:2.4rem;text-align:center;background:#cfc6dc;color:#fff;border-radius:1.2rem;padding:0 .5rem;font-weight:bold}
+.opts{flex:none;display:flex;gap:.6rem}
+.opt{flex:1;background:#fff9;border:.2rem solid #d8c9b0;border-radius:1rem;padding:.4rem;text-align:center;font-size:1.25rem}.opt b{font-size:1.7rem}
+.scs{flex:none;display:flex;gap:.6rem}
+.sc{flex:1;display:flex;align-items:center;gap:.6rem;background:#fff9;border:.2rem solid #d8c9b0;border-radius:1.1rem;padding:.4rem .7rem;font-size:1.2rem;cursor:pointer}
+.sc img{width:3.8rem}.sc input{margin-left:auto;width:2rem;height:2rem}
+button.go,button.sm{background:#8fcf8f;border:.25rem solid #5fae5f;border-radius:1.3rem;font-weight:bold;cursor:pointer;color:#2d4a2d}
+button.go{flex:none;height:4.4rem;font-size:1.9rem;padding:0 2.4rem}
+button.go.pp{background:#bfa8e8;border-color:#9a82c9;color:#fff;width:100%}
+button.go.big{height:5.8rem;font-size:2.5rem;width:100%;max-width:50rem}
+button.sm{padding:.1rem .7rem;font-size:1.15rem;margin:.1rem;background:#e8d9b8;border-color:#cbb89c;color:#4a3b32;border-width:.2rem;border-radius:.8rem}
+button:disabled{opacity:.45;cursor:not-allowed}
+.bar{flex:none;height:1.4rem;width:100%;background:#0003;border-radius:.8rem;overflow:hidden}.bar i{display:block;height:100%;width:0;background:#5fae5f}
+/* 화로 */
+.fgrid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 6rem 1fr;gap:.4rem;align-items:stretch}
+.fgrid .arrow{display:flex;align-items:center;justify-content:center;font-size:4.6rem;color:#b3a7bd}
+.sg{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:.6rem}
+.slc{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden}.slc img{height:9rem;max-width:100%;object-fit:contain}
+.slc.dim{opacity:.45}.eff{display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.3rem;background:#fff6;border:.2rem dashed #d8c9b0;border-radius:1.1rem;padding:.6rem}
+.og{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.7rem}
+.orc{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden;font-size:1.3rem}.orc img{height:9rem;max-width:100%;object-fit:contain}
+.fbot{flex:none;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+/* 부화기·플레이어·상점 */
+.incimg{flex:1;min-height:0;width:100%;object-fit:contain}
+.shopgrid{flex:1;min-height:0;display:grid;grid-template-columns:2.4fr 1fr;gap:1.4rem}
+.shopgrid .ig{grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr)}
+.sh img{height:3.8rem}.sh .pr{font-size:1.2rem}
+.big-n{font-size:3.4rem;font-weight:bold;text-align:center;margin:.4rem 0}
+.pg{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;align-content:start}
+.pg .pk img{max-width:7.5rem}
+.cg{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.cg .slc img{height:auto;width:17rem}
+@media(max-aspect-ratio:1/1){html{font-size:2.4vw}#md{width:96vw;height:auto;max-height:94vh;overflow:auto}.two,.two.inv,.fgrid,.shopgrid{grid-template-columns:1fr!important}.fgrid .arrow{display:none}}
+</style></head><body>
+<div id="stage">
+  <div id="gb">🪙 <b id="gold">0</b></div>
+  <div id="top">
+    <button class="mb" title="의뢰소" onclick="soon('의뢰소')"><img data-i="메뉴바/의뢰소"></button>
+    <button class="mb" title="상점" onclick="openM('shop')"><img data-i="메뉴바/상점"></button>
+    <button class="mb" title="설정" onclick="soon('설정')"><img data-i="메뉴바/설정"></button>
+  </div>
+  <img id="ore" class="obj" data-i="플레이어/광석" onclick="clickOre()">
+  <img id="pl" class="obj" onclick="openM('pl')">
+  <img id="fu" class="obj" onclick="openM('fu')">
+  <img id="inc" class="obj" onclick="openM('inc')">
+  <img id="gem" class="obj" data-i="보석 세공/보석 세공하는 곳" onclick="soon('보석 세공대')">
+  <div id="mbar"><i id="mb2"></i></div>
+  <div id="bot">
+    <button class="mb" title="곡괭이 제작/강화" onclick="openM('work')"><img data-i="메뉴바/곡괭이 제작강화"></button>
+    <button class="mb" title="보관함" onclick="openM('inv')"><img data-i="메뉴바/가방"></button>
+  </div>
+</div>
+<div class="rs"><a href="#" onclick="if(confirm('저장 데이터를 모두 지울까요?')){localStorage.removeItem(KEY);location.reload()}return false" style="color:#fff8">데이터 초기화</a></div>
+<div id="toast"></div>
+<div id="ov" onclick="if(event.target===this)closeM()"><div id="md"><button id="x" onclick="closeM()">✕</button><div id="mh"></div><div id="mbody"></div></div></div>
+
+<script>
+/* ===== 이미지 경로 설정 =====
+   깃허브 저장소 루트에 images 폴더를 만들고, 그 안에 폴더들을 그대로 넣으면 됨 */
+const IMG='images/', KEY='slimemine_v2';
+const BG='배경/배경'; // → images/배경/배경.png (파일 위치/이름이 다르면 여기만 수정)
+const src=p=>IMG+encodeURI(p)+'.png';
+const $=id=>document.getElementById(id), rnd=(a,b)=>a+Math.random()*(b-a);
+const TN=['나무','돌','철','금','다이아'];
+const PD=['기본적인 곡괭이입니다.','나무보다 단단한 곡괭이입니다.','튼튼해서 오래 쓰는 곡괭이입니다.','채굴이 빠른 금 곡괭이입니다.','가장 단단한 최고급 곡괭이입니다.'];
+/* 아이템: [이미지경로, 판매가] */
+const IT={'나무':['곡괭이 재료/나무',3],'돌':['곡괭이 재료/돌',2],'석탄':['광질/석탄',5],'구리 광석':['광질/구리 광석',12],'주석 광석':['광질/주석 광석',12],'철 광석':['광질/철 광석',18],'금 광석':['광질/금 광석',30],'자수정':['광질/자수정',60],'루비':['광질/루비',90],'에메랄드':['광질/애메랄드',90],'다이아':['곡괭이 재료/다이아',200],'구리 주괴':['광질/구리 주괴',35],'주석 주괴':['광질/주석 주괴',35],'철 주괴':['곡괭이 재료/철',55],'금 주괴':['곡괭이 재료/금',100],'강화 스크롤':['스크롤/강화 스크롤',50],'파괴 방지 스크롤':['스크롤/파괴 방지 스크롤',150]};
+/* 보관함 분류 */
+const CAT={ore:['돌','석탄','구리 광석','주석 광석','철 광석','금 광석'],gem:['자수정','루비','에메랄드','다이아'],etc:['나무','구리 주괴','주석 주괴','철 주괴','금 주괴','강화 스크롤','파괴 방지 스크롤']};
+const SELL=[...CAT.ore,...CAT.gem,'구리 주괴','주석 주괴','철 주괴','금 주괴']; // 상점에서 판매 가능한 광물
+/* 뽑기권 이미지: images/스크롤 뽑기권/일반.png ... images/꾸미기 뽑기권/희귀.png (폴더 이름이 다르면 여기만 수정) */
+const TKT=[['스크롤','스크롤 뽑기권'],['꾸미기','꾸미기 뽑기권']], TKG=['일반','고급','희귀'];
+/* 채굴표: [아이템, 필요 곡괭이 단계(0=나무 ~ 4=다이아), 가중치]
+   돌 곡괭이(1)로 철 광석 → 철 곡괭이(2)로 금 광석 → 금 곡괭이(3)로 다이아 */
+const ORES=[['나무',0,5],['돌',0,40],['석탄',0,20],['구리 광석',1,20],['주석 광석',1,15],['철 광석',1,15],['금 광석',2,8],['자수정',2,5],['루비',3,4],['에메랄드',3,4],['다이아',3,3]];
+const SM={'구리 광석':'구리 주괴','주석 광석':'주석 주괴','철 광석':'철 주괴','금 광석':'금 주괴'};
+/* 곡괭이 제작 재료: m=재료, g=골드 (나무 곡괭이는 골드만) */
+const RC=[{m:{},g:100},{m:{'돌':10,'나무':3},g:200},{m:{'철 주괴':5,'나무':3},g:500},{m:{'금 주괴':5,'철 주괴':2},g:1000},{m:{'다이아':5,'금 주괴':3},g:3000}];
+/* 화로: [효과 설명, 제련 속도 배율, 주괴 +1 확률]  ('일반'은 슬라임이 없는 기본 화로) */
+const SL={'일반':['슬라임 없음 (기본 제련)',1,0],'풀':['제련 시 25% 확률로 주괴 +1',1,.25],'불':['제련 속도 ×2',2,0],'물':['제련 속도 ×1.5',1.5,0],'바람':['제련 속도 ×1.3 + 10% 확률 주괴 +1',1.3,.1]};
+const EGG=30, MAXLV=10;
+const newPk=t=>({t,lv:0,st:{s:0,l:0,d:0,u:0}});
+let S={gold:500,inv:{'강화 스크롤':2,'파괴 방지 스크롤':1},pk:[newPk(0)],eq:0,g:'여자',sl:{'풀':0,'불':0,'물':0,'바람':0},fs:'일반',fon:true,fo:{'구리 광석':true,'주석 광석':true,'철 광석':true,'금 광석':true},fp:0,ia:false,ip:-1,mp:0,ct:0,cf:-1,es:0,su:false,ss:false,it:'all'};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+let M=null;
+const has=k=>S.inv[k]||0, add=(k,n)=>S.inv[k]=has(k)+n;
+const spd=p=>(1+.4*p.t)*(1+.12*p.lv)*(1+p.st.s/100);
+const pkn=p=>`${TN[p.t]} 곡괭이 +${p.lv}`;
+const pimg=t=>src('곡괭이/'+TN[t]+' 곡괭이');
+const er=p=>Math.min(100,Math.max(10,95-p.lv*9)+p.st.l+(S.su&&has('강화 스크롤')?15:0));
+const dr=p=>(S.ss&&has('파괴 방지 스크롤'))?0:Math.max(0,(p.lv-2)*4-p.st.u);
+const cost=p=>100*(p.lv+1)*(p.t+1);
+const ic=p=>`<img src="${src(p)}">`;
+const tile=k=>`<div class="it ${has(k)?'':'dim'}" title="${k}">${ic(IT[k][0])}<div class="nm">${k}</div><div class="cn">×${has(k)}</div></div>`;
+const tkTiles=big=>TKT.flatMap(([k,f])=>TKG.map(g=>`<div class="it dim" title="${g} ${f}">${ic(f+'/'+g)}<div class="nm">${big?g+' '+f:k+' '+g}</div><div class="cn">×0</div></div>`)).join('');
+
+function toast(t){const e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2000)}
+function soon(n){toast(n+'은(는) 아직 준비 중이에요')}
+function fl(t){const s=document.createElement('span');s.className='fl';s.textContent=t;s.style.left=rnd(6,22)+'%';s.style.bottom='52%';$('stage').appendChild(s);setTimeout(()=>s.remove(),1000)}
+function setI(id,p){const e=$(id),s=src(p);if(e.dataset.s!==s){e.dataset.s=s;e.src=s}}
+
+/* ===== 채굴 ===== */
+function mined(){const p=S.pk[S.eq],pool=ORES.filter(o=>o[1]<=p.t);let r=rnd(0,pool.reduce((a,o)=>a+o[2],0)),o=pool[0];
+  for(const x of pool){if((r-=x[2])<=0){o=x;break}}
+  const n=1+(Math.random()*100<p.st.d?1:0);add(o[0],n);fl('+'+o[0]+(n>1?' ×2':''));S.mp=0}
+function clickOre(){S.mp+=.15;const e=$('ore');e.classList.add('hit');setTimeout(()=>e.classList.remove('hit'),80);if(S.mp>=1)mined()}
+
+/* ===== 메인 루프 (0.1초) ===== */
+let fon=false;
+function tick(){const dt=.1,p=S.pk[S.eq];
+  S.mp+=dt*.35*spd(p);if(S.mp>=1)mined();
+  // 화로: 선택한 광석만 제련
+  const ore=Object.keys(SM).find(k=>S.fo[k]&&has(k)>0),fx=SL[S.fs]||SL['일반'];fon=!!(S.fon&&ore);
+  if(fon){S.fp+=dt*fx[1]/2;if(S.fp>=1){S.fp=0;add(ore,-1);add(SM[ore],1+(Math.random()<fx[2]?1:0))}}
+  // 부화기
+  if(S.ip<0&&S.ia&&S.gold>=EGG){S.gold-=EGG;S.ip=0}
+  if(S.ip>=0){S.ip+=dt/15;if(S.ip>=1){const k=Object.keys(S.sl)[Math.floor(rnd(0,4))];S.sl[k]++;S.ip=-1;toast(k+' 슬라임이 부화했어요!');rend()}}
+  paint();
+}
+function paint(){
+  $('gold').textContent=S.gold.toLocaleString();
+  const p=S.pk[S.eq];
+  setI('pl','플레이어/기본 '+S.g+'/'+TN[p.t]);
+  setI('fu','화로/'+S.fs+'_'+(fon?'on':'off'));
+  setI('inc',S.ip>=0?'슬라임 부화기/부화기 (알 있음)':'슬라임 부화기/부화기');
+  $('mb2').style.width=S.mp*100+'%';
+  const pb=$('pb');if(pb&&M==='fu')pb.style.width=S.fp*100+'%';
+  if(pb&&M==='inc')pb.style.width=Math.max(0,S.ip)*100+'%';
+}
+setInterval(tick,100);
+setInterval(()=>localStorage.setItem(KEY,JSON.stringify(S)),3000);
+
+/* ===== 팝업 ===== */
+const TITLE={work:'곡괭이 제작 / 강화',inv:'보관함',fu:'화로',inc:'슬라임 부화기',pl:'플레이어',shop:'상점'};
+function hIcon(m){return m=='work'?'메뉴바/곡괭이 제작강화':m=='inv'?'메뉴바/가방':m=='shop'?'메뉴바/상점':m=='fu'?'화로/'+S.fs+'_on':m=='inc'?'슬라임 부화기/부화기':'플레이어/기본 '+S.g+'/'+TN[S.pk[S.eq].t]}
+function openM(m){M=m;$('mh').innerHTML=`<img src="${src(hIcon(m))}">${TITLE[m]}`;$('ov').style.display='flex';rend()}
+function closeM(){M=null;$('ov').style.display='none'}
+function rend(){if(!M)return;$('mbody').innerHTML=({work:pWork,inv:pInv,fu:pFu,inc:pInc,pl:pPl,shop:pShop})[M]()}
+
+/* --- 보관함 (전체/광석/보석/뽑기권/기타) --- */
+function pInv(){const t=S.it,p=S.pk[S.eq];
+  const T=[['all','전체','곡괭이/나무 곡괭이'],['ore','광석','곡괭이 재료/돌'],['gem','보석','광질/루비'],['tk','뽑기권','스크롤 뽑기권/일반'],['etc','기타','곡괭이 재료/나무']];
+  const tabs=`<div class="tabs">${T.map(([k,n,im])=>`<button class="${t==k?'on':''}" onclick="S.it='${k}';rend()">${ic(im)}${n}</button>`).join('')}</div>`;
+  if(t=='all'){const own=[...CAT.ore,...CAT.gem,...CAT.etc].filter(k=>has(k)>0).slice(0,20);
+    const slots=own.map(tile).concat(Array(20-own.length).fill('<div class="it empty"></div>')).join('');
+    return tabs+`<div class="two inv"><div class="col">
+      <div class="card"><div class="ct">보유 중인 곡괭이</div><div class="eqp"><div class="bx"><img src="${pimg(p.t)}"><span class="badge">장착 중</span></div><div><b style="font-size:2rem">${pkn(p)}</b><br><span class="note">${PD[p.t]}</span><br><span class="note">채굴 ×${spd(p).toFixed(2)} · 보유 ${S.pk.length}개</span></div></div></div>
+      <div class="card"><div class="ct">뽑기권 보유 현황</div><div class="tkr">${tkTiles(0)}</div></div></div>
+      <div class="card"><div class="ct">광석 · 보석 · 재료 보유 현황</div><div class="ig">${slots}</div></div></div>`}
+  if(t=='tk')return tabs+`<div class="card lg"><div class="ct">뽑기권 보유 현황</div><div class="ig w tk">${tkTiles(1)}</div><p class="note">뽑기권은 업데이트 예정이에요.</p></div>`;
+  const names={ore:'광석 보유 현황',gem:'보석 보유 현황',etc:'기타 보유 현황'};
+  return tabs+`<div class="card lg"><div class="ct">${names[t]}</div><div class="ig w">${CAT[t].map(tile).join('')}</div></div>`}
+
+/* --- 상점 (광물 판매 전용) --- */
+function val(list){return list.reduce((a,k)=>a+has(k)*IT[k][1],0)}
+function pShop(){
+  const t=SELL.map(k=>`<div class="it sh ${has(k)?'':'dim'}">${ic(IT[k][0])}<div class="nm">${k} ×${has(k)}</div><div class="pr">🪙${IT[k][1]}</div><div><button class="sm" ${has(k)?'':'disabled'} onclick="sell('${k}',0)">1개</button><button class="sm" ${has(k)?'':'disabled'} onclick="sell('${k}',1)">전체</button></div></div>`).join('');
+  return `<div class="shopgrid"><div class="card"><div class="ct"><img src="${src('곡괭이 재료/다이아')}">판매할 광물</div><div class="ig">${t}</div></div>
+  <div class="card"><div class="ct">한 번에 판매</div>
+    <div class="note" style="text-align:center">광석 판매 예상 금액</div><div class="big-n">🪙 ${val(CAT.ore).toLocaleString()}</div>
+    <button class="go" ${val(CAT.ore)?'':'disabled'} onclick="sellG(CAT.ore)">광석 전체 판매</button>
+    <div class="note" style="text-align:center;margin-top:.8rem">보석 판매 예상 금액</div><div class="big-n">🪙 ${val(CAT.gem).toLocaleString()}</div>
+    <button class="go" ${val(CAT.gem)?'':'disabled'} onclick="sellG(CAT.gem)">보석 전체 판매</button>
+    <p class="note" style="margin-top:auto">주괴는 곡괭이 제작에 쓰이니 위에서 하나씩 판매하세요. 뽑기권 구매는 업데이트 예정이에요.</p></div></div>`}
+function sell(k,all){const n=all?has(k):1;if(n<=0)return;S.gold+=n*IT[k][1];add(k,-n);rend()}
+function sellG(list){const v=val(list);if(!v)return;S.gold+=v;list.forEach(k=>S.inv[k]=0);toast('🪙 '+v.toLocaleString()+' 골드를 얻었어요!');rend()}
+
+/* --- 곡괭이 제작 / 강화 (한 화면에 좌우로) --- */
+function pWork(){return `<div class="two">${pCraft()}${pEnh()}</div>`}
+function setCF(i){S.cf=i;if(i>=0)S.ct=i;rend()}
+function pCraft(){const r=RC[S.ct],ok=Object.keys(r.m).every(k=>has(k)>=r.m[k])&&S.gold>=r.g,list=TN.map((n,i)=>i).filter(i=>S.cf<0||S.cf==i);
+  return `<div class="card"><div class="ct"><img src="${src('메뉴바/곡괭이 제작강화')}">곡괭이 제작</div>
+  <div class="row" style="flex:none"><div class="fchip ${S.cf<0?'on':''}" onclick="setCF(-1)">전체</div>${TN.map((n,i)=>`<div class="fchip ${S.cf==i?'on':''}" onclick="setCF(${i})">${ic(IT[n]?IT[n][0]:'곡괭이 재료/'+n)}${n}</div>`).join('')}</div>
+  <div class="pl5">${list.map(i=>`<div class="pk ${i==S.ct?'on':''}" onclick="S.ct=${i};rend()"><img src="${pimg(i)}"><br>${TN[i]} 곡괭이</div>`).join('')}</div>
+  <div class="dt"><img src="${pimg(S.ct)}"><div><b style="font-size:2rem">${TN[S.ct]} 곡괭이</b><br><span class="note">${PD[S.ct]}</span></div></div>
+  <div class="sub">제작 재료</div><div class="row" style="flex:none">${Object.entries(r.m).map(([k,v])=>`<div class="mat ${has(k)>=v?'':'lack'}">${ic(IT[k][0])}<span>${k} ×${v}<br>(보유 ${has(k)})</span></div>`).join('')}<div class="mat ${S.gold>=r.g?'':'lack'}"><span style="font-size:2.8rem">🪙</span><span>골드 ×${r.g}</span></div></div>
+  <button class="go" ${ok?'':'disabled'} onclick="craft()">제작하기</button></div>`}
+function craft(){const r=RC[S.ct];if(!Object.keys(r.m).every(k=>has(k)>=r.m[k])||S.gold<r.g)return;
+  for(const k in r.m)add(k,-r.m[k]);S.gold-=r.g;S.pk.push(newPk(S.ct));toast(TN[S.ct]+' 곡괭이를 제작했어요!');rend()}
+
+const SN=[['채굴 속도','s'],['행운','l'],['광물 드롭 확률','d'],['내구도','u']];
+function pEnh(){if(S.es>=S.pk.length)S.es=0;const p=S.pk[S.es],c=cost(p),mx=p.lv>=MAXLV;
+  return `<div class="card"><div class="ct"><span style="font-size:2.4rem">✨</span>곡괭이 강화</div>
+  <div class="strip">${S.pk.map((q,i)=>`<div class="mini ${i==S.es?'on':''}" onclick="S.es=${i};rend()"><img src="${pimg(q.t)}">+${q.lv}${i==S.eq?' ⛏':''}</div>`).join('')}</div>
+  <div class="fr"><div class="pbox"><img src="${pimg(p.t)}"><br>${TN[p.t]} 곡괭이<br><b>+${p.lv}</b></div><span class="arr">➜</span><div class="pbox"><img src="${pimg(p.t)}"><br>${TN[p.t]} 곡괭이<br><b>${mx?'MAX':'+'+(p.lv+1)}</b></div>
+  <div class="rb"><b>✦ 랜덤 속성</b>${SN.map(([n,k])=>`<div><span class="q">${p.st[k]>0?'+'+p.st[k]+'%':'?'}</span> ${n}</div>`).join('')}</div></div>
+  <div class="opts"><div class="opt">성공 확률<br><b>${er(p)}%</b></div><div class="opt">파괴 확률<br><b>${dr(p)}%</b></div><div class="opt ${S.gold>=c?'':'lack'}">비용<br><b>🪙 ${c}G</b></div></div>
+  <div class="sub">사용할 스크롤 (선택)</div><div class="scs">
+  <label class="sc">${ic(IT['강화 스크롤'][0])}<div><b>강화 확률 업</b><br>보유 : ${has('강화 스크롤')}</div><input type="checkbox" ${S.su?'checked':''} ${has('강화 스크롤')?'':'disabled'} onchange="S.su=this.checked;rend()"></label>
+  <label class="sc">${ic(IT['파괴 방지 스크롤'][0])}<div><b>파괴 방지</b><br>보유 : ${has('파괴 방지 스크롤')}</div><input type="checkbox" ${S.ss?'checked':''} ${has('파괴 방지 스크롤')?'':'disabled'} onchange="S.ss=this.checked;rend()"></label></div>
+  <button class="go pp" ${mx||S.gold<c?'disabled':''} onclick="enh()">✦ 강화하기</button><div class="note" style="flex:none">ⓘ 스크롤을 사용하지 않아도 강화할 수 있습니다.</div></div>`}
+function enh(){const p=S.pk[S.es],c=cost(p);if(p.lv>=MAXLV||S.gold<c)return;
+  const us=S.su&&has('강화 스크롤'),ud=S.ss&&has('파괴 방지 스크롤'),rt=er(p),ds=dr(p);
+  S.gold-=c;if(us)add('강화 스크롤',-1);if(ud)add('파괴 방지 스크롤',-1);
+  if(Math.random()*100<rt){p.lv++;const k='sldu'[Math.floor(rnd(0,4))];p.st[k]+=Math.round(rnd(1,4));toast('강화 성공! +'+p.lv+' (랜덤 속성 상승)')}
+  else if(Math.random()*100<ds){S.pk.splice(S.es,1);if(!S.pk.length)S.pk.push(newPk(0));
+    if(S.eq===S.es)S.eq=0;else if(S.eq>S.es)S.eq--;S.es=0;toast('💥 곡괭이가 파괴됐어요…')}
+  else toast('강화 실패… 단계는 그대로예요');
+  if(S.su&&!has('강화 스크롤'))S.su=false;if(S.ss&&!has('파괴 방지 스크롤'))S.ss=false;rend()}
+
+/* --- 화로 (슬라임 선택 → 제련할 광석 선택 → 제련하기) --- */
+function pFu(){const ks=Object.keys(SL);
+  const sl=ks.map(k=>`<div class="slc ${k==S.fs?'on':''} ${(k=='일반'||S.sl[k])?'':'dim'}" onclick="setFS('${k}')"><img src="${src('화로/'+k+'_off')}"><div>${k=='일반'?'일반 화로':k+' 슬라임 ×'+S.sl[k]}</div></div>`).join('');
+  const og=Object.keys(SM).map(k=>`<div class="orc ${S.fo[k]?'on':''}" onclick="S.fo['${k}']=!S.fo['${k}'];rend()">${ic(IT[k][0])}<b>${k}</b><div>보유 ${has(k)} → ${SM[k]}</div></div>`).join('');
+  return `<div class="fgrid"><div class="card"><div class="ct">✦ 슬라임 선택</div><div class="sg">${sl}<div class="eff">효과<br><b>${SL[S.fs][0]}</b></div></div></div>
+  <div class="arrow">➜</div>
+  <div class="card"><div class="ct">✦ 제련할 광석 선택</div><div class="og">${og}</div></div></div>
+  <div class="fbot"><div class="bar" style="max-width:50rem"><i id="pb"></i></div><button class="go big" onclick="S.fon=!S.fon;rend()">${S.fon?'제련 중 (누르면 중지)':'제련하기'}</button></div>`}
+function setFS(k){if(k!='일반'&&!S.sl[k]){toast(k+' 슬라임이 없어요. 부화기에서 얻어 보세요!');return}S.fs=k;rend()}
+
+/* --- 슬라임 부화기 --- */
+function pInc(){return `<div class="two"><div class="card" style="align-items:center"><div class="ct" style="align-self:stretch">부화기</div><img class="incimg" src="${src(S.ip>=0?'슬라임 부화기/부화기 (알 있음)':'슬라임 부화기/부화기')}"><div class="bar"><i id="pb"></i></div><div class="note">${S.ip>=0?'부화 중이에요…':'알이 없어요'}</div></div>
+  <div class="card"><div class="ct">부화 설정</div><div>알 1개당 🪙${EGG} · 부화 시간 15초 · 슬라임 종류는 무작위</div>
+  <div class="sub">보유 슬라임</div><div class="sg" style="grid-template-rows:repeat(2,1fr);grid-template-columns:repeat(2,1fr)">${Object.entries(S.sl).map(([k,v])=>`<div class="slc ${v?'':'dim'}" style="cursor:default"><img src="${src('화로/'+k+'_off')}"><div>${k} 슬라임 ×${v}</div></div>`).join('')}</div>
+  <button class="go" ${S.ip>=0||S.gold<EGG?'disabled':''} onclick="hatch()">부화 시작 (🪙${EGG})</button>
+  <button class="go" onclick="S.ia=!S.ia;rend()">자동 부화: ${S.ia?'켜짐 (끄기)':'꺼짐 (켜기)'}</button></div></div>`}
+function hatch(){if(S.ip>=0||S.gold<EGG)return;S.gold-=EGG;S.ip=0;rend()}
+
+/* --- 플레이어 --- */
+function pPl(){return `<div class="two"><div class="card"><div class="ct">캐릭터</div><div class="cg">${['여자','남자'].map(g=>`<div class="slc ${g==S.g?'on':''}" onclick="S.g='${g}';rend()"><img src="${src('플레이어/기본 '+g+'/'+TN[S.pk[S.eq].t])}"><div><b>${g}</b></div></div>`).join('')}</div></div>
+  <div class="card"><div class="ct">들고 있는 곡괭이</div><div class="pg">${S.pk.map((q,i)=>`<div class="pk ${i==S.eq?'on':''}" onclick="S.eq=${i};S.mp=0;rend()"><img src="${pimg(q.t)}"><br>${pkn(q)}<br>채굴 ×${spd(q).toFixed(2)}</div>`).join('')}</div></div></div>`}
+
+document.querySelectorAll('[data-i]').forEach(e=>e.src=src(e.dataset.i));
+$('stage').style.background=`url("${src(BG)}") center/cover no-repeat,linear-gradient(#4b4a63,#5c5a73 55%,#7b6f66 55%,#6a5f58)`;
+tick();
+</script></body></html>
