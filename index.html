@@ -66,4 +66,139 @@ footer{text-align:center;color:#fff8;padding:30px 10px 50px;font-size:13px}
 
 <section class="sec" id="play"><h2><img data-i="메뉴바/곡괭이 제작강화">플레이 방법</h2><div class="in"><div class="steps">
   <div class="step"><b>광석 채굴</b><br>장착 곡괭이 기반 자동 채굴 진행. 광석 더미 직접 클릭 시 채굴 게이지 가속.</div>
-  <div
+  <div class="step"><b>보관함 확인</b><br>채굴 광석 및 획득 재료의 <b>보관함(가방)</b> 자동 적재.</div>
+  <div class="step"><b>화로 제련</b><br>화로 메뉴 내 <b>제련 대상 광석</b> 선택 및 자동 제련 활성화. (구리·주석·철·금 광석의 주괴화)</div>
+  <div class="step"><b>곡괭이 제작 &amp; 강화</b><br>주괴 및 골드 소모를 통한 곡괭이 제작. 강화를 통한 채굴 속도 향상 및 무작위 속성 획득.</div>
+  <div class="step"><b>세공 &amp; 의뢰</b><br>보석 세공 장신구의 의뢰소 납품을 통한 골드 및 희귀 보상 획득. 상점을 통한 필요 아이템 확정 구매.</div>
+</div></div></section>
+
+<section class="sec" id="char"><h2><img data-i="플레이어/기본 여자/다이아">캐릭터</h2><div class="in two">
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card"><img class="big" data-i="플레이어/기본 여자/다이아"><b>여자 캐릭터</b></div>
+    <div class="card"><img class="big" data-i="플레이어/기본 남자/다이아"><b>남자 캐릭터</b></div>
+  </div>
+  <div><p><b>여자 · 남자</b> 2종 캐릭터 선택 기능 지원. 클릭을 통한 수시 변경 가능.</p>
+  <p><b>장착 곡괭이 종류에 따른 캐릭터 외형 변화.</b> (나무·돌·철·금·다이아 곡괭이별 전용 외형 / 사진: 다이아 곡괭이 장착 모습)</p>
+  <p>꾸미기 뽑기권 획득 아이템을 활용한 <b>캐릭터 및 슬라임 커스터마이징.</b></p></div>
+</div></section>
+
+<section class="sec" id="ore"><h2><img data-i="곡괭이 재료/다이아">광석 도감</h2><div class="in">
+  <p class="note">곡괭이 단계별 등급 광석 등장. 판매가는 임시 판매 기준.</p>
+  <div class="grid" id="oreGrid"></div>
+  <h3>제련 주괴</h3><div class="grid" id="ingotGrid"></div>
+</div></section>
+
+<section class="sec" id="pick"><h2><img data-i="곡괭이/다이아 곡괭이">곡괭이 제작 &amp; 강화</h2><div class="in">
+  <div class="grid" id="pickGrid"></div>
+  <h3>강화 시스템</h3>
+  <table><tr><th>항목</th><th>내용</th></tr>
+  <tr><td>강화 단계</td><td>최대 +10강까지 강화 가능. 단계 상승 시 채굴 속도 증가.</td></tr>
+  <tr><td>성공 확률</td><td>단계 상승에 따른 성공 확률 감소 (행운 속성을 통한 보완 가능).</td></tr>
+  <tr><td>파괴 확률</td><td>+3강 이상 실패 시 곡괭이 파괴 위험 존재 (내구도 속성을 통한 확률 감소).</td></tr>
+  <tr><td>랜덤 속성</td><td>강화 성공 시 <b>채굴 속도 · 행운 · 광물 드롭 확률 · 내구도</b> 중 1종 무작위 부여.</td></tr></table>
+  <h3>강화 스크롤 6종</h3>
+  <div class="grid" id="scrollGrid"></div>
+  <p class="note">스크롤 사용은 선택 사항이며, 미사용 상태에서도 강화 진행 가능.</p>
+</div></section>
+
+<section class="sec" id="furnace"><h2><img data-i="화로/일반_on">화로 &amp; 슬라임</h2><div class="in">
+  <p>초기 <b>일반 화로</b> 상태로 시작. <b>슬라임 부화기</b>를 통한 알 부화(🪙30, 15초 소요, 무작위 슬라임) 및 화로 배치로 기능 강화.</p>
+  <div class="grid">
+    <div class="card"><img data-i="화로/일반_on"><b>일반 화로</b>기본 제련 기능</div>
+    <div class="card"><img data-i="화로/풀_on"><b>풀 슬라임</b>25% 확률로 주괴 +1 획득</div>
+    <div class="card"><img data-i="화로/불_on"><b>불 슬라임</b>제련 속도 2배 증가</div>
+    <div class="card"><img data-i="화로/물_on"><b>물 슬라임</b>제련 속도 1.5배 증가</div>
+    <div class="card"><img data-i="화로/바람_on"><b>바람 슬라임</b>제련 속도 1.3배 증가 + 10% 확률 주괴 +1</div>
+    <div class="card"><img data-i="슬라임 부화기/부화기 (알 있음)"><b>슬라임 부화기</b>자동 부화 기능 지원</div>
+  </div>
+</div></section>
+
+<section class="sec" id="gem"><h2><img data-i="보석 세공/보석 세공하는 곳">보석 세공 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <div class="two">
+    <img data-i="보석 세공/보석 세공하는 곳">
+    <div><p>채굴 보석의 세공대를 통한 <b>장신구 가공.</b></p>
+    <p>보석 종류별 <b>반지 · 팔찌 · 목걸이</b> 제작 가능. (예: 다이아 활용 다이아 반지, 다이아 팔찌, 다이아 목걸이 제작)</p></div>
+  </div>
+  <h3>보석별 장신구</h3>
+  <div class="grid">
+    <div class="card"><img data-i="곡괭이 재료/다이아"><b>다이아</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/루비"><b>루비</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/애메랄드"><b>에메랄드</b>반지 · 팔찌 · 목걸이</div>
+    <div class="card"><img data-i="광질/자수정"><b>자수정</b>반지 · 팔찌 · 목걸이</div>
+  </div>
+  <h3>세공 장신구 활용처</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">단품 납품</span><p>제작 장신구의 <b>의뢰소 개별 납품</b>을 통한 골드 획득.</p></div>
+    <div class="qrow"><span class="tag r2">세트 납품</span><p>동일 보석 세트(반지·팔찌·목걸이) <b>모음 납품</b>을 통한 <b>추가 골드 획득.</b></p></div>
+  </div>
+  <div class="soonbox note">※ 미구현 상태이며 세부 규칙은 추후 업데이트 시 공개 예정.</div>
+</div></section>
+
+<section class="sec" id="shop"><h2><img data-i="메뉴바/상점">상점 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p>필수 아이템의 <b>확정 구매 공간.</b></p>
+  <div class="grid">
+    <div class="card"><img data-i="스크롤/강화 스크롤"><b>기본 강화 스크롤</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 스크롤 뽑기권</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 스크롤 뽑기권</b><span class="tag r2">상시 판매</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 스크롤 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/일반"><b>일반 꾸미기 뽑기권</b><span class="tag">상시 판매</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/고급"><b>고급 꾸미기 뽑기권</b><span class="tag r2">상시 판매</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/희귀"><b>희귀 꾸미기 뽑기권</b><span class="tag r3">일일 구매 제한</span></div>
+  </div>
+  <p class="note">희귀 뽑기권의 경우 게임 밸런스 유지를 위한 일일 구매 수량 제한 적용.</p>
+</div></section>
+
+<section class="sec" id="gacha"><h2><img data-i="스크롤 뽑기권/고급">뽑기 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p><b>스크롤 뽑기권</b>과 <b>꾸미기 뽑기권</b> 2종 구성. 각각 <b>일반 · 고급 · 희귀</b> 등급 존재 및 등급 상승에 따른 희귀 아이템 출현율 증가.</p>
+  <h3>스크롤 뽑기권</h3>
+  <div class="grid">
+    <div class="card"><img data-i="스크롤 뽑기권/일반"><b>일반 스크롤 뽑기권</b>기본 스크롤 중심 구성<br><span class="tag">일반</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/고급"><b>고급 스크롤 뽑기권</b>상위 스크롤 출현율 증가<br><span class="tag r2">고급</span></div>
+    <div class="card"><img data-i="스크롤 뽑기권/희귀"><b>희귀 스크롤 뽑기권</b>희귀 스크롤 출현율 증가<br><span class="tag r3">희귀</span></div>
+  </div>
+  <p>강화 성공률 증가 스크롤, 곡괭이 <b>부여 속성 재설정(새로고침)</b> 스크롤 등 획득 가능. <b>파괴 방지 스크롤</b>의 낮은 확률 획득 지원.</p>
+  <h3>꾸미기 뽑기권</h3>
+  <div class="grid">
+    <div class="card"><img data-i="꾸미기 뽑기권/일반"><b>일반 꾸미기 뽑기권</b><span class="tag">일반</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/고급"><b>고급 꾸미기 뽑기권</b><span class="tag r2">고급</span></div>
+    <div class="card"><img data-i="꾸미기 뽑기권/희귀"><b>희귀 꾸미기 뽑기권</b><span class="tag r3">희귀</span></div>
+  </div>
+  <p><b>캐릭터 및 슬라임 외형 변경용</b> 꾸미기 아이템 획득. 등급 상승에 따른 희귀 꾸미기 출현율 증가.</p>
+</div></section>
+
+<section class="sec" id="quest"><h2><img data-i="메뉴바/의뢰소">의뢰소 <span class="tag soon">업데이트 예정</span></h2><div class="in">
+  <p>세공 <b>목걸이 · 반지 · 팔찌</b> 납품을 통한 보상 획득 시스템.</p>
+  <p>의뢰 등급 상승에 따른 요구 재료 수량 및 가치 증가. 완료 시 <b>골드 및 확률적 꾸미기 아이템·강화 스크롤</b> 보상 제공.</p>
+  <h3>의뢰 등급</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">일반 의뢰</span><p>일정 시간 경과 또는 <b>게임 머니</b> 소모를 통한 의뢰 갱신 기능.</p></div>
+    <div class="qrow"><span class="tag r2">희귀 의뢰</span><p>긴 대기 시간 또는 높은 비용 소모, <b>고급 뽑기권 · 고급 강화 스크롤 · 희귀 꾸미기 아이템</b> 보상 획득 가능.</p></div>
+    <div class="qrow"><span class="tag r3">특별 의뢰</span><p><b>매일 자동 초기화</b> (비용 갱신 불가). <b>최고급 꾸미기 아이템 및 파괴 방지 스크롤</b> 등 희귀 보상 구성.</p></div>
+  </div>
+  <h3>의뢰 예시</h3>
+  <div class="qlist">
+    <div class="qrow"><span class="tag">다이아</span><p><b>다이아 장신구 납품</b> : 다이아 팔찌 1개 + 다이아 반지 2개</p></div>
+    <div class="qrow"><span class="tag r3">루비</span><p><b>루비 장신구 납품</b> : 루비 목걸이 2개 + 루비 반지 1개</p></div>
+    <div class="qrow"><span class="tag r2">혼합</span><p><b>혼합 장신구 납품</b> : 다이아 팔찌 1개 + 에메랄드 반지 1개 등 <b>이종 보석 조합</b> 요구.</p></div>
+  </div>
+  <p class="note">의뢰 화면 내 납품 목록 및 완료 보상 확인, 보유 세공 아이템 즉시 납품 지원. 갱신 대기 시간 표시 및 골드 소모 갱신 기능 제공. 상점의 안정적 구매와 의뢰소의 희귀 보상 획득 구조 구축.</p>
+</div></section>
+</main>
+<footer>슬라임 광산 · 광산으로의 탐험 출발</footer>
+
+<script>
+const IMG='images/', src=p=>IMG+encodeURI(p)+'.png';
+const TN=['나무','돌','철','금','다이아'];
+/* [이름, 이미지, 채굴 가능 곡괭이 단계, 판매가] */
+const ORES=[['나무','곡괭이 재료/나무',0,3],['돌','곡괭이 재료/돌',0,2],['석탄','광질/석탄',0,5],['구리 광석','광질/구리 광석',1,12],['주석 광석','광질/주석 광석',1,12],['철 광석','광질/철 광석',1,18],['금 광석','광질/금 광석',2,30],['자수정','광질/자수정',2,60],['루비','광질/루비',3,90],['에메랄드','광질/애메랄드',3,90],['다이아','곡괭이 재료/다이아',3,200]];
+const ING=[['구리 광석','구리 주괴','광질/구리 주괴',35],['주석 광석','주석 주괴','광질/주석 주괴',35],['철 광석','철 주괴','곡괭이 재료/철',55],['금 광석','금 주괴','곡괭이 재료/금',100]];
+const REC=['소모 골드: 🪙100','돌 ×10, 나무 ×3, 🪙200','철 주괴 ×5, 나무 ×3, 🪙500','금 주괴 ×5, 철 주괴 ×2, 🪙1,000','다이아 ×5, 금 주괴 ×3, 🪙3,000'];
+const SCR=[['강화 스크롤','강화 성공 확률 증가'],['고급 강화 스크롤','강화 성공 확률 대폭 증가'],['복구 스크롤','파괴 아이템 복구'],['축복 스크롤','강화 성공 확률 축복 효과 부여'],['파괴 방지 스크롤','강화 실패 시 파괴 방지'],['확정 강화 스크롤','강화 단계 확정 상승']];
+const set=(id,h)=>document.getElementById(id).innerHTML=h;
+set('oreGrid',ORES.map(o=>`<div class="card"><img src="${src(o[1])}"><b>${o[0]}</b>🪙${o[3]}<br><span class="tag">${TN[o[2]]} 곡괭이 이상</span></div>`).join(''));
+set('ingotGrid',ING.map(o=>`<div class="card"><img src="${src(o[2])}"><b>${o[1]}</b>${o[0]} 제련<br>🪙${o[3]}</div>`).join(''));
+set('pickGrid',TN.map((n,i)=>`<div class="card"><img src="${src('곡괭이/'+n+' 곡괭이')}"><b>${n} 곡괭이</b>채굴 속도 ×${(1+.4*i).toFixed(1)}<br><span class="note">${REC[i]}</span></div>`).join(''));
+set('scrollGrid',SCR.map(s=>`<div class="card"><img src="${src('스크롤/'+s[0])}"><b>${s[0]}</b>${s[1]}</div>`).join(''));
+document.querySelectorAll('[data-i]').forEach(e=>e.src=src(e.dataset.i));
+document.querySelector('.hero').style.backgroundImage=`url("${src('배경/배경')}")`;
+</script></body></html>
